@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://jnordberg.github.io/gif.js/gif.js?v=3"></script>
+</head>
+<body>
+    <h1>word to gif</h1>
+    <input type="text" id="inputWord"><button id="generate">產生</button>
+    <canvas id="word" width="200" height="200" style="border: 1px solid gray;"></canvas>
+    <div id="result"></div>
+    <script>
+    const inputElem = document.getElementById('inputWord');
+    const generateButton = document.getElementById('generate');
+    const resultContainer = document.getElementById('result');
+    const canvasElem = document.getElementById('word');
+    const ctx = canvasElem.getContext('2d');
+
+    const canvasWidth = 200;
+    const canvasHeight = 200;
+
+    const delay = 1000;
+
+    const generate = () => {
+        const targetWords = inputElem.value.trim().split('');
+        const gif = new GIF({
+            workers: 2,
+            workerScript: '/jsgif/gif.worker.js',
+            quailty: 10,
+            repeat: 0,
+            background: '#fff',
+        });
+
+        targetWords.forEach(char => {
+            drawWord(char);
+            gif.addFrame(canvasElem, {copy: true, delay: delay});
+        });
+
+        gif.on('finished', (blob) => {
+        const dom = document.createElement('img');
+            blobToDataURL(blob, (url) => {
+                dom.src = url;
+            });
+            resultContainer.innerHTML = '';
+            resultContainer.appendChild(dom);
+        });
+        gif.render();
+    }
+
+    const clear = () => {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
+
+    const blobToDataURL = (blob, callback) => {
+        var a = new FileReader();
+        a.onload = function(e) {callback(e.target.result);}
+        a.readAsDataURL(blob);
+    }
+
+    const drawWord = (word) => {
+        clear();
+        ctx.fillStyle = 'black';
+        ctx.font = '190px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(word, 100, 94);
+    }
+
+    generateButton.addEventListener('click', generate);
+    </script>
+</body>
+</html>
