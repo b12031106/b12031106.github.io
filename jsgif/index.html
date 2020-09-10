@@ -9,11 +9,22 @@
 </head>
 <body>
     <h1>word to gif</h1>
-    <input type="text" id="inputWord"><button id="generate">產生</button>
+    <h3>文字位置跑掉的話可以自己調整偏移</h3>
+    文字內容<input type="text" id="inputWord">
+    x偏移<input type="text" id="x" value="100">
+    y偏移<input type="text" id="y" value="110">
+    每個文字的顯示時間<input type="text" id="delay" value="1000">毫秒
+    <br>
+    <button id="generate">產生 gif</button>
+    <br>
     <canvas id="word" width="200" height="200" style="border: 1px solid gray;"></canvas>
+    <h4>成果 gif 會出現在底下，自己右鍵另存</h4>
     <div id="result"></div>
     <script>
     const inputElem = document.getElementById('inputWord');
+    const inputX = document.getElementById('x');
+    const inputY = document.getElementById('y');
+    const inputDelay = document.getElementById('delay');
     const generateButton = document.getElementById('generate');
     const resultContainer = document.getElementById('result');
     const canvasElem = document.getElementById('word');
@@ -25,6 +36,7 @@
     const delay = 1000;
 
     const generate = () => {
+        const delay = parseInt(inputDelay.value, 10);
         const targetWords = inputElem.value.trim().split('');
         const gif = new GIF({
             workers: 2,
@@ -67,7 +79,7 @@
         ctx.font = '190px "Helvetica", "Arial","LiHei Pro","黑體-繁","微軟正黑體", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(word, 100, 94);
+        ctx.fillText(word, parseInt(inputX.value, 10), parseInt(inputY.value, 10));
     }
 
     generateButton.addEventListener('click', generate);
