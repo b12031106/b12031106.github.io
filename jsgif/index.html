@@ -35,9 +35,21 @@
 
     const delay = 1000;
 
+    const emojiStringToArray = function (str) {
+        split = str.split(/([\uD800-\uDBFF][\uDC00-\uDFFF])/);
+        arr = [];
+        for (var i=0; i<split.length; i++) {
+            char = split[i]
+            if (char !== "") {
+              arr.push(char);
+            }
+        }
+        return arr;
+    };
+
     const generate = () => {
         const delay = parseInt(inputDelay.value, 10);
-        const targetWords = inputElem.value.trim().split('');
+        const targetWords = emojiStringToArray(inputElem.value.trim());
         const gif = new GIF({
             workers: 2,
             workerScript: '/jsgif/gif.worker.js',
