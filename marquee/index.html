@@ -7,6 +7,26 @@
     <title>Document</title>
 </head>
 <body style="background: #d3caca;">
+    <div id="root">
+        <p>
+            設定好參數後按下「開始產生」，等動畫結束就可以點擊該動畫進行 gif 的下載
+        </p>
+        <div>
+            輸入文字：<input type="text" name="" id="text-body" value="假頭刀">
+        </div>
+        <div>
+            FPS：<input type="number" name="" id="fps" value="30" min="1">
+        </div>
+        <div>
+            動畫長度：<input type="number" name="" id="animation-duration" value="5000" min="1"> 毫秒
+        </div>
+        <div>
+            跑馬燈長度：<input type="number" name="" id="emoji-counts" value="4" min="1"> 個 emoji
+        </div>
+        <div>
+            <button id="generate-btn">開始產生</button>
+        </div>
+    </div>
     <div id="drawing-zone"></div>
     <div id="result-zone"></div>
     <script src="/assets/js/gif/gif.js"></script>
