@@ -10,4 +10,4 @@ https://b12031106.github.io/jsgif/
 ## 跑馬燈 emoji 產生器
 https://b12031106.github.io/marquee/
 
-跟字卡 emoji 產生器很像，都是為了在 slack 上面可以發一些幹話 emoji 做的，目前尚未工具化
+跟字卡 emoji 產生器很像，都是為了在 slack 上面可以發一些幹話 emoji 做的 ~，目前尚未工具化~
