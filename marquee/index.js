@@ -2,6 +2,8 @@ const body = document.body;
 const bodyStyle = getComputedStyle(body);
 const drawingZoneEl = document.getElementById('drawing-zone');
 const resultZoneEl = document.getElementById('result-zone');
+const inputFontColor = document.getElementById('font-color');
+const inputBackgroundColor = document.getElementById('background-color');
 const generateButtonEl = document.getElementById('generate-btn');
 const textBodyEl = document.getElementById('text-body');
 const fpsEl = document.getElementById('fps');
@@ -19,9 +21,6 @@ const inputs = [
 const SQUARE_SIZE = 64;
 const CANVAS_HEIGHT = SQUARE_SIZE;
 
-const FONT_COLOR = '#000';
-const BACKGROUND_COLOR = '#fff';
-
 const FONT_SIZE = '60px';
 const FONT_FAMILY = bodyStyle.fontFamily;
 
@@ -30,6 +29,9 @@ const FONT_FAMILY = bodyStyle.fontFamily;
 let canvases = [];
 
 // functions
+
+const getFontColor = () => inputFontColor.value;
+const getBackgroundColor = () => inputBackgroundColor.value;
 
 const createCanvas = (idx, size) => {
     let el = document.createElement('canvas');
@@ -47,7 +49,7 @@ const createCanvas = (idx, size) => {
 
 const clearCanvas = () => {
     canvases.forEach(canvas => {
-        canvas.ctx.fillStyle = BACKGROUND_COLOR;
+        canvas.ctx.fillStyle = getBackgroundColor();
         canvas.ctx.fillRect(0, 0, SQUARE_SIZE, SQUARE_SIZE);
     })
 }
@@ -57,7 +59,7 @@ const drawText = (posX, text) => {
     canvases.forEach((canvas, idx) => {
         let shiftPos = idx * SQUARE_SIZE;
         // 繪製畫面到 canvas
-        canvas.ctx.fillStyle = FONT_COLOR;
+        canvas.ctx.fillStyle = getFontColor();
         canvas.ctx.fillText(text, posX - shiftPos, SQUARE_SIZE / 2);
         // 將 canvas 的畫面加入 gif 的一個 frame
         canvas.gif.addFrame(canvas.ctx, {

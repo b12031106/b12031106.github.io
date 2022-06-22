@@ -15,6 +15,9 @@
     y偏移<input type="text" id="y" value="110">
     每個文字的顯示時間<input type="text" id="delay" value="1000">毫秒
     <br>
+    背景顏色 <input type="color" value="#ffffff" id="background-color">
+    文字顏色 <input type="color" value="#000000" id="font-color">
+    <br>
     <button id="generate">產生 gif</button>
     <br>
     <canvas id="word" width="200" height="200" style="border: 1px solid gray;"></canvas>
@@ -25,6 +28,8 @@
     const inputX = document.getElementById('x');
     const inputY = document.getElementById('y');
     const inputDelay = document.getElementById('delay');
+    const inputFontColor = document.getElementById('font-color');
+    const inputBackgroundColor = document.getElementById('background-color');
     const generateButton = document.getElementById('generate');
     const resultContainer = document.getElementById('result');
     const canvasElem = document.getElementById('word');
@@ -47,7 +52,7 @@
             workerScript: '/assets/js/gif/gif.worker.js',
             quailty: 10,
             repeat: 0,
-            background: '#fff',
+            background: getBackgroundColor(),
         });
 
         targetWords.forEach(char => {
@@ -67,7 +72,7 @@
     }
 
     const clear = () => {
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = getBackgroundColor();
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     }
 
@@ -77,9 +82,12 @@
         a.readAsDataURL(blob);
     }
 
+    const getFontColor = () => inputFontColor.value;
+    const getBackgroundColor = () => inputBackgroundColor.value;
+
     const drawWord = (word) => {
         clear();
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = getFontColor();
         ctx.font = '190px "Helvetica", "Arial","LiHei Pro","黑體-繁","微軟正黑體", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
