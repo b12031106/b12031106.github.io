@@ -4,6 +4,8 @@ const drawingZoneEl = document.getElementById('drawing-zone');
 const resultZoneEl = document.getElementById('result-zone');
 const inputFontColor = document.getElementById('font-color');
 const inputBackgroundColor = document.getElementById('background-color');
+const selectFontFamily = document.getElementById('font-family');
+const buttonUpdateLocalFont = document.getElementById('update-local-font');
 const generateButtonEl = document.getElementById('generate-btn');
 const textBodyEl = document.getElementById('text-body');
 const fpsEl = document.getElementById('fps');
@@ -21,14 +23,25 @@ const inputs = [
 const SQUARE_SIZE = 64;
 const CANVAS_HEIGHT = SQUARE_SIZE;
 
-const FONT_SIZE = '60px';
-const FONT_FAMILY = bodyStyle.fontFamily;
+const DEFAULT_FONT_SIZE = '60px';
+const DEFAULT_FAMILY = bodyStyle.fontFamily;
 
 //
 
 let canvases = [];
 
 // functions
+
+const getFontSize = () => DEFAULT_FONT_SIZE;
+const getFontFamily = () => selectFontFamily.value || DEFAULT_FAMILY;
+
+const updateLocalFonts = async () => {
+    const fonts = await window.queryLocalFonts();
+    selectFontFamily.options.length = 0;
+    fonts.forEach((font) => {
+        selectFontFamily.add(new Option(font.fullName, font.family));
+    });
+}
 
 const getFontColor = () => inputFontColor.value;
 const getBackgroundColor = () => inputBackgroundColor.value;
@@ -42,7 +55,7 @@ const createCanvas = (idx, size) => {
 
     // 預設的 context 設定
     ctx.textBaseline= 'middle';
-    ctx.font = `${FONT_SIZE} ${FONT_FAMILY}`;
+    ctx.font = `${getFontSize()} ${getFontFamily()}`;
 
     return el;
 }
@@ -74,6 +87,18 @@ const getMeasureTextWidth = (ctx, text) => {
     return textMertric.width;
 };
 
+const calculateFileSize = (url) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(`GET`, url, true);
+    xhr.responseType = `arraybuffer`;
+    xhr.onreadystatechange = function () {
+        if (this.readyState === this.DONE) {
+            console.log(`url size`, this.response.byteLength);
+        }
+    }
+    xhr.send(null);
+}
+
 const generateFileDownloadLink = (canvas, idx) => {
     canvas.gif.on('finished', blob => {
         let url = URL.createObjectURL(blob);
@@ -84,6 +109,7 @@ const generateFileDownloadLink = (canvas, idx) => {
         el.href = url;
         el.download = `gif-${idx}.gif`;
         console.log('finished', idx);
+        calculateFileSize(url);
     });
     console.log('render');
     canvas.gif.render();
@@ -174,10 +200,9 @@ const getFrameDuration = () => 1000 / getFps();
 const getTotalFrames = () => getAnimationDuration() / getFrameDuration();
 
 // bind event
+buttonUpdateLocalFont.addEventListener('click', updateLocalFonts);
 generateButtonEl.addEventListener('click', () => {
     reset();
     lockAll();
     doGenerate(getTextBody());
 });
-
-// initialize();

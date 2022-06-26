@@ -18,6 +18,8 @@
     背景顏色 <input type="color" value="#ffffff" id="background-color">
     文字顏色 <input type="color" value="#000000" id="font-color">
     <br>
+    字型選單 <select id="font-family"></select> <button id="update-local-font">更新字型清單</button><b>這裡不選的話就會用系統預設</b>
+    <br>
     <button id="generate">產生 gif</button>
     <br>
     <canvas id="word" width="200" height="200" style="border: 1px solid gray;"></canvas>
@@ -30,6 +32,8 @@
     const inputDelay = document.getElementById('delay');
     const inputFontColor = document.getElementById('font-color');
     const inputBackgroundColor = document.getElementById('background-color');
+    const selectFontFamily = document.getElementById('font-family');
+    const buttonUpdateLocalFont = document.getElementById('update-local-font');
     const generateButton = document.getElementById('generate');
     const resultContainer = document.getElementById('result');
     const canvasElem = document.getElementById('word');
@@ -38,7 +42,23 @@
     const canvasWidth = 200;
     const canvasHeight = 200;
 
+    const DEFAULT_FAMILY = `"Helvetica", "Arial","LiHei Pro","黑體-繁","微軟正黑體", sans-serif`;
+
     const delay = 1000;
+
+    const getFontFamily = () => {
+        return selectFontFamily.value || DEFAULT_FAMILY;
+    }
+
+    const updateLocalFonts = async () => {
+        const fonts = await window.queryLocalFonts();
+        selectFontFamily.options.length = 0;
+        fonts.forEach((font) => {
+            selectFontFamily.add(new Option(font.fullName, font.family));
+        });
+    }
+
+    const getFontSize = () => `190px`;
 
     const stringToArray = function (str) {
         return [...str];
@@ -88,13 +108,15 @@
     const drawWord = (word) => {
         clear();
         ctx.fillStyle = getFontColor();
-        ctx.font = '190px "Helvetica", "Arial","LiHei Pro","黑體-繁","微軟正黑體", sans-serif';
+        ctx.font = `${getFontSize()} ${getFontFamily()}`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(word, parseInt(inputX.value, 10), parseInt(inputY.value, 10));
     }
 
     generateButton.addEventListener('click', generate);
+    buttonUpdateLocalFont.addEventListener('click', updateLocalFonts);
+
     </script>
 </body>
 </html>
